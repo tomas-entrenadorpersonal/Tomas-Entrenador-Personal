@@ -1,19 +1,19 @@
 body {
-  background: #2A7B9B;
-  background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(21, 63, 79, 1) 100%);
+  background: #23272a;
+  background: linear-gradient(90deg, #23272a 0%, #181a1b 100%);
   min-height: 100vh;
   margin: 0;
-  color: #E6C245; /* Color principal del texto */
+  color: #FFD700; /* Color principal del texto */
   font-family: Arial, sans-serif;
 }
 /* Encabezados */
 h1, h2, h3, h4, h5, h6 {
-  color: #E6C245;
+  color: #FFD700;
 }
 
 /* Enlaces */
 a {
-  color: #E6C245;
+  color: #FFD700;
   text-decoration: none;
 }
 
@@ -24,48 +24,54 @@ a:hover, a:focus {
 
 /* Botones con clase btn-primary */
 .btn-primary {
-  background-color: #E6C245;
-  border-color: #E6C245;
+  background-color: #FFD700;
+  border-color: #FFD700;
   color: #2A7B9B;
 }
 
 .btn-primary:hover, .btn-primary:focus {
   background-color: #153F4F;
   border-color: #153F4F;
-  color: #E6C245;
+  color: #FFD700;
 }
 
 /* Bordes o detalles (por ejemplo, bordes de tarjetas) */
 .card, .bordered {
-  border: 1px solid #E6C245;
+  border: 1px solid #FFD700;
 }
 
 /* Otros detalles que quieras destacar */
 .text-highlight {
-  color: #E6C245;
+  color: #FFD700;
 }
 
 .navbar-custom {
-  background-color: #2A7B9B; /* verde claro, por ejemplo */
+  background-color: #444950;
+}
+
+/* Aplica el color dorado a los textos de la barra de navegación */
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+  color: #FFD700 !important;
 }
 
 .card {
   background: #153F4F;
-  color: #E6C245;
+  color: #FFD700;
   border: none;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .card .btn-outline-primary {
-  color: #E6C245;
-  border-color: #E6C245;
+  color: #FFD700;
+  border-color: #FFD700;
 }
 
 .card .btn-outline-primary:hover {
-  background-color: #E6C245;
+  background-color: #FFD700;
   color: #153F4F; /* cambia al verde lima al hacer hover */
-  border-color: #E6C245;
+  border-color: #FFD700;
 }
 
 .card-img-top {
