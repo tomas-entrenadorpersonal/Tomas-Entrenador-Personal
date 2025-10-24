@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Añadir y Borrar Alimentos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/estilos.css" />
+</head>
+<body>
+
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">MisCalorias</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="../index.html">Inicio</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<div class="container my-5">
+  <h1 class="mb-4">Añadir Alimento</h1>
+
+  <!-- Formulario para añadir alimentos -->
+  <form id="formAlimento" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label for="nombre" class="form-label">Ingrediente</label>
+      <input type="text" class="form-control" id="nombre" required />
+    </div>
+    <div class="col-md-2">
+      <label for="calorias" class="form-label">Calorías</label>
+      <input type="number" class="form-control" id="calorias" min="0" step="0.01" required />
+    </div>
+    <div class="col-md-2">
+      <label for="proteina" class="form-label">Proteína (g)</label>
+      <input type="number" class="form-control" id="proteina" min="0" step="0.01" required />
+    </div>
+    <div class="col-md-2">
+      <label for="hidratos" class="form-label">Hidratos (g)</label>
+      <input type="number" class="form-control" id="hidratos" min="0" step="0.01" required />
+    </div>
+    <div class="col-md-2">
+      <label for="grasas" class="form-label">Grasas (g)</label>
+      <input type="number" class="form-control" id="grasas" min="0" step="0.01" required />
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Añadir Alimento</button>
+    </div>
+  </form>
+
+  <h2 class="mb-3">Listado de Alimentos Guardados</h2>
+  <table class="table table-striped" id="tablaAlimentos">
+    <thead>
+      <tr>
+        <th>Ingrediente</th>
+        <th>Calorías</th>
+        <th>Proteína (g)</th>
+        <th>Hidratos (g)</th>
+        <th>Grasas (g)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí se mostrarán los alimentos -->
+    </tbody>
+  </table>
+
+  <button id="btnGuardar" class="btn btn-primary">Cargar Alimentos por defecto</button>
+  <button id="btnBorrar" class="btn btn-primary">Borrar Todos los datos</button>
+
+</div>
+
+<script src="../js/alimentos.js"></script>
+<script>
+  document.getElementById('btnGuardar').addEventListener('click', function() {
+    guardarAlimentos();
+    alert('Alimentos guardados en localStorage');
+    mostrarAlimentos();
+  });
+
+  function borrarTodosAlimentos() {
+    localStorage.removeItem('alimentos');
+    console.log('Todos los alimentos han sido borrados.');
+  }
+
+
+  document.getElementById('btnBorrar').addEventListener('click', function() {
+    borrarTodosAlimentos();
+    mostrarAlimentos();
+  });
+</script>
+
+<script>
+  const form = document.getElementById('formAlimento');
+  const tablaBody = document.querySelector('#tablaAlimentos tbody');
+
+  // Leer alimentos desde localStorage
+  function leerAlimentos() {
+    const datos = localStorage.getItem('alimentos');
+    return datos ? JSON.parse(datos) : [];
+  }
+
+  // Mostrar alimentos en la tabla
+  function mostrarAlimentos() {
+    const alimentos = leerAlimentos();
+    tablaBody.innerHTML = '';
+
+    alimentos.forEach((item, index) => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${item.nombre}</td>
+        <td>${item.calorias}</td>
+        <td>${item.proteina}</td>
+        <td>${item.hidratos}</td>
+        <td>${item.grasas}</td>
+        <td><button class="btn btn-danger btn-sm btn-eliminar" data-index="${index}">Eliminar</button></td>
+      `;
+      tablaBody.appendChild(fila);
+    });
+
+    // Añadir evento a botones eliminar
+    document.querySelectorAll('.btn-eliminar').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = e.target.getAttribute('data-index');
+        eliminarAlimento(parseInt(idx));
+      });
+    });
+  }
+
+  // Añadir nuevo alimento
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nuevoAlimento = {
+      nombre: form.nombre.value.trim(),
+      calorias: parseFloat(form.calorias.value),
+      proteina: parseFloat(form.proteina.value),
+      hidratos: parseFloat(form.hidratos.value),
+      grasas: parseFloat(form.grasas.value)
+    };
+
+    if (!nuevoAlimento.nombre) {
+      alert('Por favor, ingresa el nombre del ingrediente.');
+      return;
+    }
+
+    const alimentos = leerAlimentos();
+    alimentos.push(nuevoAlimento);
+    //guardar alimento
+    localStorage.setItem('alimentos', JSON.stringify(alimentos));
+    mostrarAlimentos();
+    form.reset();
+  });
+
+  // Eliminar alimento por índice
+  function eliminarAlimento(index) {
+    const alimentos = leerAlimentos();
+    alimentos.splice(index, 1);
+    //guardar alimento
+    localStorage.setItem('alimentos', JSON.stringify(alimentos));
+    mostrarAlimentos();
+  }
+
+  // Al cargar la página, guardar y mostrar datos
+  window.addEventListener('DOMContentLoaded', () => {
+    const datos = localStorage.getItem('alimentos');
+    if (!datos || datos === 'undefined' || datos.length === 0) {
+      guardarAlimentos(); // función definida en alimentos.js
+    }
+    mostrarAlimentos();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+body {
+  background: #2A7B9B;
+  background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(21, 63, 79, 1) 100%);
+  min-height: 100vh;
+  margin: 0;
+  color: #E6C245; /* Color principal del texto */
+  font-family: Arial, sans-serif;
+}
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  color: #E6C245;
+}
+
+/* Enlaces */
+a {
+  color: #E6C245;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  text-decoration: underline;
+  color: #7A4E20; /* un tono más oscuro para hover */
+}
+
+/* Botones con clase btn-primary */
+.btn-primary {
+  background-color: #E6C245;
+  border-color: #E6C245;
+  color: #2A7B9B;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #153F4F;
+  border-color: #153F4F;
+  color: #E6C245;
+}
+
+/* Bordes o detalles (por ejemplo, bordes de tarjetas) */
+.card, .bordered {
+  border: 1px solid #E6C245;
+}
+
+/* Otros detalles que quieras destacar */
+.text-highlight {
+  color: #E6C245;
+}
+
+.navbar-custom {
+  background-color: #2A7B9B; /* verde claro, por ejemplo */
+}
+
+.card {
+  background: #153F4F;
+  color: #E6C245;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card .btn-outline-primary {
+  color: #E6C245;
+  border-color: #E6C245;
+}
+
+.card .btn-outline-primary:hover {
+  background-color: #E6C245;
+  color: #153F4F; /* cambia al verde lima al hacer hover */
+  border-color: #E6C245;
+}
+
+.card-img-top {
+  width: 100%;
+  aspect-ratio: 7 / 3; /* Relación ancho:alto similar a 350x150 */
+  object-fit: cover;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+
+
+

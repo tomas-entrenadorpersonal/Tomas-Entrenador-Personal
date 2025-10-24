@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Ingredientes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../css/estilos.css" />
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">MisCalorias</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="../index.html">Inicio</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<main class="container my-5">
+    <div class="text-center">
+      <h1 class="mb-4">RECETAS</h1>
+      <p class="lead mb-4">Aqui anotarás tus recetas.</p>
+    </div>
+</main>
+
+<div class="container my-5">
+  <h1 class="mb-4">Registro de Ingredientes</h1>
+  <div class="col-md-4">
+      <label for="idReceta" class="form-label">Nombre de la receta</label>
+      <input type="text" class="form-control" id="idReceta" required />
+  </div>
+  <div class="col-md-2">
+      <button id="btnCrearReceta" class="btn btn-primary">Guardar Receta</button>
+  </div>
+
+  <!-- Formulario para añadir registros -->
+  <form id="registroForm" class="row g-3 mb-4">
+    
+    <div class="col-md-6">
+      <label for="ingrediente" class="form-label">Ingrediente</label>
+      <select class="form-select" id="ingrediente" required>
+        <option value="" disabled selected>Selecciona un ingrediente</option>
+        <!-- Opciones se añadirán aquí dinámicamente -->
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="cantidad" class="form-label">Cantidad</label>
+      <input type="number" class="form-control" id="cantidad" required />
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Añadir Registro</button>
+      <button id="btnGuardar" class="btn btn-primary">Cargar Alimentos</button>
+    </div>
+  </form>
+  <div class="col-12">
+    
+  </div>
+  
+
+  <!-- Tabla para mostrar los registros -->
+  <table class="table table-striped" id="tablaRegistros">
+    <thead>
+      <tr>
+		<th>Comida</th>
+        <th>Ingrediente</th>
+        <th>Cantidad</th>
+        <th>Calorías</th>
+        <th>Grasas (g)</th>
+        <th>Hidratos (g)</th>
+        <th>Proteínas (g)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí se añadirán los registros -->
+    </tbody>
+	<tfoot>
+	  <tr>
+		<th colspan="3">Totales</th>
+		<th id="totalCalorias">0</th>
+		<th id="totalGrasas">0</th>
+		<th id="totalHidratos">0</th>
+		<th id="totalProteinas">0</th>
+	  </tr>
+	</tfoot>
+
+  </table>
+</div>
+
+
+<script src="../js/alimentos.js"></script>
+<script>
+  document.getElementById('btnGuardar').addEventListener('click', function() {
+    guardarAlimentos();
+    alert('Alimentos guardados en localStorage');
+    llenarSelectIngredientes();
+  });
+</script>
+<script>
+  const form = document.getElementById('registroForm');
+  const tablaBody = document.querySelector('#tablaRegistros tbody');
+  
+  // Inicializar totales en 0
+  let totalCalorias = 0;
+  let totalGrasas = 0;
+  let totalHidratos = 0;
+  let totalProteinas = 0;
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita recargar la página
+
+    // Obtener valores del formulario
+	  const comida = '';
+    const ingrediente = document.getElementById('ingrediente').value.trim();
+    const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
+
+    const alimentos = leerAlimentos();
+    const alimento = alimentos.find(item => item.nombre === ingrediente);
+
+    let calorias = alimento ? alimento.calorias : 0;
+    let grasas = alimento ? alimento.grasas : 0;
+    let hidratos = alimento ? alimento.hidratos : 0;
+    let proteinas = alimento ? alimento.proteina : 0;
+
+    //control de macros
+    calorias = parseFloat((calorias * cantidad).toFixed(2));
+    grasas = parseFloat((grasas * cantidad).toFixed(2));
+    hidratos = parseFloat((hidratos * cantidad).toFixed(2));
+    proteinas = parseFloat((proteinas * cantidad).toFixed(2));
+
+
+    // Crear una nueva fila en la tabla
+    const fila = document.createElement('tr');
+
+    fila.innerHTML = `
+      <td>${comida}</td>
+	    <td>${ingrediente}</td>
+      <td>${cantidad}</td>
+      <td>${calorias}</td>
+      <td>${grasas}</td>
+      <td>${hidratos}</td>
+      <td>${proteinas}</td>
+    `;
+
+    // Añadir la fila a la tabla
+    tablaBody.appendChild(fila);
+	
+	// Actualizar totales
+	  totalCalorias += calorias;
+	  totalGrasas += grasas;
+	  totalHidratos += hidratos;
+	  totalProteinas += proteinas;
+
+	  // Mostrar totales en el pie de tabla
+	  document.getElementById('totalCalorias').textContent = totalCalorias.toFixed(2);
+	  document.getElementById('totalGrasas').textContent = totalGrasas.toFixed(2);
+	  document.getElementById('totalHidratos').textContent = totalHidratos.toFixed(2);
+	  document.getElementById('totalProteinas').textContent = totalProteinas.toFixed(2);
+
+  });
+</script>
+<script>
+  // Función para leer alimentos desde localStorage
+  function leerAlimentos() {
+    const datos = localStorage.getItem('alimentos');
+    return datos ? JSON.parse(datos) : [];
+  }
+
+  // Función para llenar el select con los nombres
+  function llenarSelectIngredientes() {
+    const select = document.getElementById('ingrediente');
+    const alimentos = leerAlimentos();
+
+    // Limpiar opciones previas excepto la primera
+    select.length = 1;
+
+    alimentos.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.nombre;
+      option.textContent = item.nombre;
+      select.appendChild(option);
+    });
+  }
+
+  // Llamar a la función al cargar la página
+  window.addEventListener('DOMContentLoaded', llenarSelectIngredientes);
+  document.addEventListener("DOMContentLoaded", function () {
+    $('#ingrediente').select2({
+      placeholder: "Selecciona un ingrediente",
+      allowClear: true
+    });
+  });
+
+  function crearReceta() {
+    
+    // Mostrar totales en el pie de tabla
+    let calorias = parseFloat(document.getElementById('totalCalorias').textContent) || 0;
+    let grasas = parseFloat(document.getElementById('totalGrasas').textContent) || 0;
+    let hidratos = parseFloat(document.getElementById('totalHidratos').textContent) || 0;
+    let proteina = parseFloat(document.getElementById('totalProteinas').textContent) || 0;
+    const nombre = document.getElementById('idReceta').value;
+    const recetaNombre = 'Receta - ' + nombre;
+
+    console.log('estas son las calorias' + recetaNombre)
+    const nuevoAlimento = {
+      nombre: recetaNombre,
+      calorias: calorias,
+      grasas: grasas,
+      hidratos: hidratos,
+      proteina: proteina
+    };
+
+    const alimentos = leerAlimentos();
+    alimentos.push(nuevoAlimento);
+    //guardar alimento
+    localStorage.setItem('alimentos', JSON.stringify(alimentos));
+  }
+
+  document.getElementById('btnCrearReceta').addEventListener('click', function() {
+    crearReceta();
+  });
+
+</script>
+
+</body>
+</html>
